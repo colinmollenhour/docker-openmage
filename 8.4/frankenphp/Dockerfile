@@ -1,4 +1,4 @@
-FROM dunglas/frankenphp:latest-php8.2-bookworm
+FROM dunglas/frankenphp:1-php8.4-bookworm
 ENV PHP_EXT_APCU_VERSION="5.1.28"
 ENV PHP_EXT_REDIS_VERSION="6.3.0"
 ENV PHP_EXT_XDEBUG_VERSION="3.5.1"

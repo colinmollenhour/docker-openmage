@@ -28,12 +28,14 @@ $checker->info(sprintf("PHP Version: %s", phpversion()));
 
 // Check required extensions
 $required_extensions = array(
+  'bcmath',
   'curl',
   'dom',
   'ftp',
   'gd',
   'hash',
   'iconv',
+  'mysqli',
   'redis',
   'pcre',
   'pdo',

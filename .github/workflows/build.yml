@@ -3,62 +3,118 @@ name: ci
 on:
   push:
     branches:
-      - 'main'
+      - "main"
 
 jobs:
-  docker:
-    name: Build Docker Images
-    runs-on: ubuntu-latest
+  build:
+    name: Build ${{ matrix.version }}-${{ matrix.flavor }} (${{ matrix.platform.name }})
+    runs-on: ${{ matrix.platform.runner }}
+    permissions:
+      contents: read
+      packages: write
 
     strategy:
       matrix:
-        version: [ 7.4, 8.2 ]
-        flavor: [ apache, cli, fpm, frankenphp ]
-        exclude:
-          - version: 7.4
-            flavor: frankenphp
+        version: [8.2, 8.3, 8.4, 8.5]
+        flavor: [apache, cli, fpm, frankenphp]
+        platform:
+          - { name: amd64, runner: ubuntu-latest }
+          - { name: arm64, runner: ubuntu-24.04-arm }
 
     steps:
-      -
-        name: Checkout code
-        uses: actions/checkout@v3
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      -
-        name: Build image
-        uses: docker/build-push-action@v4
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build image
+        uses: docker/build-push-action@v7
         with:
           context: ${{ matrix.version }}/${{ matrix.flavor }}
           load: true
+          platforms: linux/${{ matrix.platform.name }}
           tags: openmage-dev:${{ matrix.version }}-${{ matrix.flavor }}
-      -
-        name: Test
+          cache-from: type=gha,scope=${{ matrix.version }}-${{ matrix.flavor }}-${{ matrix.platform.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.version }}-${{ matrix.flavor }}-${{ matrix.platform.name }}
+      - name: Test
         run: |
-          docker run --rm -v $(pwd)/test:/app openmage-dev:${{ matrix.version }}-${{ matrix.flavor }} php /app/test.php
-      -
-        name: Scan for vulnerabilities
+          docker run --rm -v "$(pwd)/test:/app" openmage-dev:${{ matrix.version }}-${{ matrix.flavor }} php /app/test.php
+      - name: Scan for vulnerabilities
         id: scan
-        uses: crazy-max/ghaction-container-scan@v2
+        uses: crazy-max/ghaction-container-scan@v4
         with:
           image: openmage-dev:${{ matrix.version }}-${{ matrix.flavor }}
           dockerfile: ./${{ matrix.version }}/${{ matrix.flavor }}/Dockerfile
           annotations: true
           severity: HIGH,CRITICAL
           #severity_threshold: CRITICAL
-      -
-        name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+      - name: Push by digest
+        id: push
+        uses: docker/build-push-action@v7
+        with:
+          context: ${{ matrix.version }}/${{ matrix.flavor }}
+          platforms: linux/${{ matrix.platform.name }}
+          outputs: type=image,name=ghcr.io/${{ github.repository_owner }}/docker-openmage,push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=${{ matrix.version }}-${{ matrix.flavor }}-${{ matrix.platform.name }}
+      - name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.push.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"
+      - name: Upload digest
+        uses: actions/upload-artifact@v7
+        with:
+          name: digest-${{ matrix.version }}-${{ matrix.flavor }}-${{ matrix.platform.name }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  merge:
+    name: Merge ${{ matrix.version }}-${{ matrix.flavor }}
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      matrix:
+        version: [8.2, 8.3, 8.4, 8.5]
+        flavor: [apache, cli, fpm, frankenphp]
+
+    steps:
+      - name: Download digests
+        uses: actions/download-artifact@v8
+        with:
+          pattern: digest-${{ matrix.version }}-${{ matrix.flavor }}-*
+          path: /tmp/digests
+          merge-multiple: true
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      -
-        name: Push image
-        uses: docker/build-push-action@v4
-        with:
-          context: ${{ matrix.version }}/${{ matrix.flavor }}
-          push: true
-          tags: ghcr.io/colinmollenhour/docker-openmage:${{ matrix.version }}-${{ matrix.flavor }}
-          cache-from: type=registry,ref=colinmollenhour/docker-openmage:${{ matrix.version }}-${{ matrix.flavor }}
-          cache-to: type=inline
+      - name: Create manifest list and push
+        working-directory: /tmp/digests
+        shell: bash
+        run: |
+          refs=()
+          for digest in *; do
+            refs+=("ghcr.io/${{ github.repository_owner }}/docker-openmage@sha256:${digest}")
+          done
+
+          docker buildx imagetools create \
+            -t ghcr.io/${{ github.repository_owner }}/docker-openmage:${{ matrix.version }}-${{ matrix.flavor }} \
+            "${refs[@]}"
+      - name: Inspect image
+        run: |
+          docker buildx imagetools inspect \
+            ghcr.io/${{ github.repository_owner }}/docker-openmage:${{ matrix.version }}-${{ matrix.flavor }}

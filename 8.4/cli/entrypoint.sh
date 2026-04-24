@@ -3,6 +3,13 @@ set -e
 
 [ "$DEBUG" = "true" ] && set -x
 
+if [ "$ENABLE_CRON" == "true" ]; then
+  # Get rsyslog running for cron output
+  CRON_LOG=/var/log/cron.log
+  touch $CRON_LOG
+  echo "cron.* $CRON_LOG" > /etc/rsyslog.d/cron.conf
+  service rsyslog start
+fi
 
 # Configure Xdebug
 if [ "$XDEBUG_CONFIG" ]; then
@@ -12,10 +19,6 @@ if [ "$XDEBUG_CONFIG" ]; then
     done
 fi
 
-# first arg is `-f` or `--some-option`
-if [ "${1#-}" != "$1" ]; then
-    set -- frankenphp run "$@"
-fi
 
 # Execute the supplied command
 exec "$@"

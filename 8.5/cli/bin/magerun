@@ -1,0 +1,2 @@
+
+exec sudo -u www-data -- n98-magerun.phar "$@"

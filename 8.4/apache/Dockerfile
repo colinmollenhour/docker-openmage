@@ -1,8 +1,7 @@
-FROM <?php printf("php:%s-%s", $version, $flavour) ?>
-
-ENV PHP_EXT_APCU_VERSION="<?php echo $php_ext_acpu_version ?>"
-ENV PHP_EXT_REDIS_VERSION="<?php echo $php_ext_redis_version ?>"
-ENV PHP_EXT_XDEBUG_VERSION="<?php echo $php_ext_xdebug_version ?>"
+FROM php:8.4-apache
+ENV PHP_EXT_APCU_VERSION="5.1.28"
+ENV PHP_EXT_REDIS_VERSION="6.3.0"
+ENV PHP_EXT_XDEBUG_VERSION="3.5.1"
 
 ENV BUILD_PACKAGES="libpng-dev libfreetype6-dev libjpeg62-turbo-dev libonig-dev libxml2-dev libxslt1-dev libicu-dev libssl-dev libzip-dev"
 
@@ -29,3 +28,9 @@ COPY php.ini /usr/local/etc/php/conf.d/zz-magento.ini
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
+
+RUN a2enmod rewrite headers
+
+COPY magento.conf /etc/apache2/conf-enabled/
+
+CMD ["apache2-foreground"]

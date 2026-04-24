@@ -10,7 +10,7 @@
 
 {$SERVER_NAME:localhost} {
     root * pub/default/
-    
+
     route {
         @indexFiles file {
             try_files {path} {path}/index.php index.php

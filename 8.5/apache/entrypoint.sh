@@ -12,10 +12,6 @@ if [ "$XDEBUG_CONFIG" ]; then
     done
 fi
 
-# first arg is `-f` or `--some-option`
-if [ "${1#-}" != "$1" ]; then
-    set -- frankenphp run "$@"
-fi
 
 # Execute the supplied command
 exec "$@"

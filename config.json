@@ -1,73 +1,12 @@
 {
-  "7.4-apache": {
-    "version": "7.4",
-    "flavour": "apache",
-    "files": {
-      "Dockerfile": {
-        "php_ext_acpu_version": "5.1.22",
-        "php_ext_redis_version": "5.3.7",
-        "php_ext_xdebug_version": "2.9.8"
-      },
-      "entrypoint.sh": {
-        "executable": true
-      },
-      "magento.conf": {},
-      "php.ini": {}
-    }
-  },
-  "7.4-cli": {
-    "version": "7.4",
-    "flavour": "cli",
-    "files": {
-      "Dockerfile": {
-        "php_ext_acpu_version": "5.1.22",
-        "php_ext_redis_version": "5.3.7",
-        "php_ext_xdebug_version": "2.9.8",
-        "mysql_client_package": "default-mysql-client"
-      },
-      "bin/magerun": {
-        "executable": true
-      },
-      "bin/magedbm": {
-        "executable": true
-      },
-      "bin/magemm": {
-        "executable": true
-      },
-      "entrypoint.sh": {
-        "include_cron": true,
-        "executable": true
-      },
-      "php.ini": {},
-      "run-cron.sh": {
-        "executable": true
-      }
-    }
-  },
-  "7.4-fpm": {
-    "version": "7.4",
-    "flavour": "fpm",
-    "files": {
-      "Dockerfile": {
-        "php_ext_acpu_version": "5.1.22",
-        "php_ext_redis_version": "5.3.7",
-        "php_ext_xdebug_version": "2.9.8"
-      },
-      "entrypoint.sh": {
-        "executable": true
-      },
-      "php.ini": {},
-      "www.conf": {}
-    }
-  },
   "8.2-apache": {
     "version": "8.2",
     "flavour": "apache",
     "files": {
       "Dockerfile": {
-        "php_ext_acpu_version": "5.1.22",
-        "php_ext_redis_version": "5.3.7",
-        "php_ext_xdebug_version": "3.2.1"
+        "php_ext_acpu_version": "5.1.28",
+        "php_ext_redis_version": "6.3.0",
+        "php_ext_xdebug_version": "3.5.1"
       },
       "entrypoint.sh": {
         "executable": true
@@ -81,9 +20,9 @@
     "flavour": "cli",
     "files": {
       "Dockerfile": {
-        "php_ext_acpu_version": "5.1.22",
-        "php_ext_redis_version": "5.3.7",
-        "php_ext_xdebug_version": "3.2.1",
+        "php_ext_acpu_version": "5.1.28",
+        "php_ext_redis_version": "6.3.0",
+        "php_ext_xdebug_version": "3.5.1",
         "mysql_client_package": "default-mysql-client"
       },
       "bin/magerun": {
@@ -110,9 +49,9 @@
     "flavour": "fpm",
     "files": {
       "Dockerfile": {
-        "php_ext_acpu_version": "5.1.22",
-        "php_ext_redis_version": "5.3.7",
-        "php_ext_xdebug_version": "3.2.1"
+        "php_ext_acpu_version": "5.1.28",
+        "php_ext_redis_version": "6.3.0",
+        "php_ext_xdebug_version": "3.5.1"
       },
       "entrypoint.sh": {
         "executable": true
@@ -126,9 +65,240 @@
     "flavour": "frankenphp",
     "files": {
       "Dockerfile": {
-        "php_ext_acpu_version": "5.1.22",
-        "php_ext_redis_version": "5.3.7",
-        "php_ext_xdebug_version": "3.2.1"
+        "php_ext_acpu_version": "5.1.28",
+        "php_ext_redis_version": "6.3.0",
+        "php_ext_xdebug_version": "3.5.1"
+      },
+      "entrypoint.sh": {
+        "executable": true
+      },
+      "php.ini": {},
+      "Caddyfile": {}
+    }
+  },
+  "8.3-apache": {
+    "version": "8.3",
+    "flavour": "apache",
+    "files": {
+      "Dockerfile": {
+        "php_ext_acpu_version": "5.1.28",
+        "php_ext_redis_version": "6.3.0",
+        "php_ext_xdebug_version": "3.5.1"
+      },
+      "entrypoint.sh": {
+        "executable": true
+      },
+      "magento.conf": {},
+      "php.ini": {}
+    }
+  },
+  "8.3-cli": {
+    "version": "8.3",
+    "flavour": "cli",
+    "files": {
+      "Dockerfile": {
+        "php_ext_acpu_version": "5.1.28",
+        "php_ext_redis_version": "6.3.0",
+        "php_ext_xdebug_version": "3.5.1",
+        "mysql_client_package": "default-mysql-client"
+      },
+      "bin/magerun": {
+        "executable": true
+      },
+      "bin/magedbm": {
+        "executable": true
+      },
+      "bin/magemm": {
+        "executable": true
+      },
+      "entrypoint.sh": {
+        "include_cron": true,
+        "executable": true
+      },
+      "php.ini": {},
+      "run-cron.sh": {
+        "executable": true
+      }
+    }
+  },
+  "8.3-fpm": {
+    "version": "8.3",
+    "flavour": "fpm",
+    "files": {
+      "Dockerfile": {
+        "php_ext_acpu_version": "5.1.28",
+        "php_ext_redis_version": "6.3.0",
+        "php_ext_xdebug_version": "3.5.1"
+      },
+      "entrypoint.sh": {
+        "executable": true
+      },
+      "php.ini": {},
+      "www.conf": {}
+    }
+  },
+  "8.3-frankenphp": {
+    "version": "8.3",
+    "flavour": "frankenphp",
+    "files": {
+      "Dockerfile": {
+        "php_ext_acpu_version": "5.1.28",
+        "php_ext_redis_version": "6.3.0",
+        "php_ext_xdebug_version": "3.5.1"
+      },
+      "entrypoint.sh": {
+        "executable": true
+      },
+      "php.ini": {},
+      "Caddyfile": {}
+    }
+  },
+  "8.4-apache": {
+    "version": "8.4",
+    "flavour": "apache",
+    "files": {
+      "Dockerfile": {
+        "php_ext_acpu_version": "5.1.28",
+        "php_ext_redis_version": "6.3.0",
+        "php_ext_xdebug_version": "3.5.1"
+      },
+      "entrypoint.sh": {
+        "executable": true
+      },
+      "magento.conf": {},
+      "php.ini": {}
+    }
+  },
+  "8.4-cli": {
+    "version": "8.4",
+    "flavour": "cli",
+    "files": {
+      "Dockerfile": {
+        "php_ext_acpu_version": "5.1.28",
+        "php_ext_redis_version": "6.3.0",
+        "php_ext_xdebug_version": "3.5.1",
+        "mysql_client_package": "default-mysql-client"
+      },
+      "bin/magerun": {
+        "executable": true
+      },
+      "bin/magedbm": {
+        "executable": true
+      },
+      "bin/magemm": {
+        "executable": true
+      },
+      "entrypoint.sh": {
+        "include_cron": true,
+        "executable": true
+      },
+      "php.ini": {},
+      "run-cron.sh": {
+        "executable": true
+      }
+    }
+  },
+  "8.4-fpm": {
+    "version": "8.4",
+    "flavour": "fpm",
+    "files": {
+      "Dockerfile": {
+        "php_ext_acpu_version": "5.1.28",
+        "php_ext_redis_version": "6.3.0",
+        "php_ext_xdebug_version": "3.5.1"
+      },
+      "entrypoint.sh": {
+        "executable": true
+      },
+      "php.ini": {},
+      "www.conf": {}
+    }
+  },
+  "8.4-frankenphp": {
+    "version": "8.4",
+    "flavour": "frankenphp",
+    "files": {
+      "Dockerfile": {
+        "php_ext_acpu_version": "5.1.28",
+        "php_ext_redis_version": "6.3.0",
+        "php_ext_xdebug_version": "3.5.1"
+      },
+      "entrypoint.sh": {
+        "executable": true
+      },
+      "php.ini": {},
+      "Caddyfile": {}
+    }
+  },
+  "8.5-apache": {
+    "version": "8.5",
+    "flavour": "apache",
+    "files": {
+      "Dockerfile": {
+        "php_ext_acpu_version": "5.1.28",
+        "php_ext_redis_version": "6.3.0",
+        "php_ext_xdebug_version": "3.5.1"
+      },
+      "entrypoint.sh": {
+        "executable": true
+      },
+      "magento.conf": {},
+      "php.ini": {}
+    }
+  },
+  "8.5-cli": {
+    "version": "8.5",
+    "flavour": "cli",
+    "files": {
+      "Dockerfile": {
+        "php_ext_acpu_version": "5.1.28",
+        "php_ext_redis_version": "6.3.0",
+        "php_ext_xdebug_version": "3.5.1",
+        "mysql_client_package": "default-mysql-client"
+      },
+      "bin/magerun": {
+        "executable": true
+      },
+      "bin/magedbm": {
+        "executable": true
+      },
+      "bin/magemm": {
+        "executable": true
+      },
+      "entrypoint.sh": {
+        "include_cron": true,
+        "executable": true
+      },
+      "php.ini": {},
+      "run-cron.sh": {
+        "executable": true
+      }
+    }
+  },
+  "8.5-fpm": {
+    "version": "8.5",
+    "flavour": "fpm",
+    "files": {
+      "Dockerfile": {
+        "php_ext_acpu_version": "5.1.28",
+        "php_ext_redis_version": "6.3.0",
+        "php_ext_xdebug_version": "3.5.1"
+      },
+      "entrypoint.sh": {
+        "executable": true
+      },
+      "php.ini": {},
+      "www.conf": {}
+    }
+  },
+  "8.5-frankenphp": {
+    "version": "8.5",
+    "flavour": "frankenphp",
+    "files": {
+      "Dockerfile": {
+        "php_ext_acpu_version": "5.1.28",
+        "php_ext_redis_version": "6.3.0",
+        "php_ext_xdebug_version": "3.5.1"
       },
       "entrypoint.sh": {
         "executable": true
